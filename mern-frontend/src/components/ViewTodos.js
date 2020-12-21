@@ -106,7 +106,7 @@ export default class ViewTodos extends Component {
                       ) : (
                         <Fragment>
                           <tr>
-                            <td colSpan={5}>
+                            <td colSpan={6}>
                               <center>No Data</center>
                             </td>
                           </tr>
