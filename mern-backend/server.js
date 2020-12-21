@@ -16,7 +16,9 @@ app.use(bodyParser.json(), bodyParser.urlencoded({ extended: false }));
 
 const db = require("./config/keys").mongoURI;
 
-mongoose.connect(db, { useNewUrlParser: true, useUnifiedTopology: true });
+// mongoose.connect("mongodb://127.0.0.1:27017/todos", { useNewUrlParser: true }); //for local host
+
+mongoose.connect(db, { useNewUrlParser: true, useUnifiedTopology: true }); //for atlas db
 const connection = mongoose.connection;
 
 connection.once("open", function () {
