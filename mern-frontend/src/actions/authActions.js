@@ -7,7 +7,9 @@ import { GET_ERRORS, SET_CURRENT_USER, USER_LOADING } from "./types";
 export const registerUser = (userData, history) => (dispatch) => {
   axios
     .post("/api/users/register", userData)
-    .then((res) => history.push("/login"))
+    .then((res) => {
+      history.push("/login");
+    })
     .catch((error) => {
       dispatch({
         type: GET_ERRORS,
@@ -55,6 +57,6 @@ export const setUserLoading = () => {
 // Log user out
 export const logoutUser = () => (dispatch) => {
   localStorage.removeItem("jwtToken");
-  setAuthToken(false);
+  authToken(false);
   dispatch(setCurrentUser({}));
 };

@@ -1,4 +1,9 @@
 import React, { Component, Fragment } from "react";
+import { withRouter } from "react-router-dom";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { registerUser } from "../../actions/authActions";
+import classnames from "classnames";
 
 export class Register extends Component {
   constructor(props) {
@@ -12,6 +17,14 @@ export class Register extends Component {
     };
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.errors) {
+      this.setState({
+        errors: nextProps.errors,
+      });
+    }
+  }
+
   changeHandler = (e) => {
     this.setState({
       [e.target.name]: e.target.value,
@@ -19,6 +32,13 @@ export class Register extends Component {
   };
   submitHandler = (e) => {
     e.preventDefault();
+    let body = {
+      name: this.state.name,
+      email: this.state.email,
+      password: this.state.password,
+      password2: this.state.password2,
+    };
+    this.props.registerUser(body, this.props.history);
   };
 
   render() {
@@ -40,7 +60,9 @@ export class Register extends Component {
                     </label>
                     <input
                       type="text"
-                      className="form-control"
+                      className={classnames("form-control", {
+                        invalid: errors.name,
+                      })}
                       id="inputname"
                       name="name"
                       value={this.state.name}
@@ -48,9 +70,7 @@ export class Register extends Component {
                       onChange={(e) => this.changeHandler(e)}
                       required
                     />
-                    <div class="invalid-feedback">
-                      Please provide a valid name.
-                    </div>
+                    <span className="text-danger">{errors.name}</span>
                   </div>
                   <div className="col-md-6">
                     <label for="inputemail" className="form-label">
@@ -58,7 +78,9 @@ export class Register extends Component {
                     </label>
                     <input
                       type="email"
-                      className="form-control"
+                      className={classnames("form-control", {
+                        invalid: errors.email,
+                      })}
                       id="inputemail"
                       name="email"
                       value={this.state.email}
@@ -66,6 +88,7 @@ export class Register extends Component {
                       onChange={(e) => this.changeHandler(e)}
                       required
                     />
+                    <span className="text-danger">{errors.email}</span>
                   </div>
 
                   <div className="col-md-6">
@@ -74,7 +97,9 @@ export class Register extends Component {
                     </label>
                     <input
                       type="password"
-                      className="form-control"
+                      className={classnames("form-control", {
+                        invalid: errors.password,
+                      })}
                       id="inputpassword"
                       name="password"
                       value={this.state.password}
@@ -82,6 +107,7 @@ export class Register extends Component {
                       onChange={(e) => this.changeHandler(e)}
                       required
                     />
+                    <span className="text-danger">{errors.password}</span>
                   </div>
                   <div className="col-md-6">
                     <label for="inputpassword2" className="form-label">
@@ -89,7 +115,9 @@ export class Register extends Component {
                     </label>
                     <input
                       type="password"
-                      className="form-control"
+                      className={classnames("form-control", {
+                        invalid: errors.password2,
+                      })}
                       id="inputpassword2"
                       name="password2"
                       value={this.state.password2}
@@ -97,6 +125,7 @@ export class Register extends Component {
                       onChange={(e) => this.changeHandler(e)}
                       required
                     />
+                    <span className="text-danger">{errors.password2}</span>
                   </div>
                   <div class="col-12">
                     <button class="btn btn-primary" type="submit">
@@ -113,4 +142,15 @@ export class Register extends Component {
   }
 }
 
-export default Register;
+Register.propTypes = {
+  registerUser: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired,
+};
+const mapStateToProps = (state) => {
+  return {
+    auth: state.auth,
+    errors: state.error,
+  };
+};
+export default connect(mapStateToProps, { registerUser })(withRouter(Register));
