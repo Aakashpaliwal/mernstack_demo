@@ -9,6 +9,9 @@ const validateLoginInput = require("../../validation/Login");
 const User = require("../../models/User");
 const passport = require("passport");
 
+// @route POST api/users/register
+// @desc Register user
+// @access Public
 //reigster route
 router.post("/register", (req, res) => {
   //Form Validation
@@ -44,10 +47,13 @@ router.post("/register", (req, res) => {
   });
 });
 
+// @route POST api/users/login
+// @desc Login user and return JWT token
+// @access Public
 //login routes
 router.post("/login", (req, res) => {
   //Form Validation
-  const { errors, isValid } = validateRegisterInput(req.body);
+  const { errors, isValid } = validateLoginInput(req.body);
 
   //check validation
   if (!isValid) {
@@ -62,29 +68,34 @@ router.post("/login", (req, res) => {
       return res.status(404).json({ emailnotfound: "Email not found" });
     }
 
-    bcrypt.compare(passport, user.password).then((isMatch) => {
+    // Check password
+    bcrypt.compare(password, user.password).then((isMatch) => {
       if (isMatch) {
-        //create jwt_payload
+        // User matched
+        // Create JWT Payload
         const payload = {
           id: user.id,
           name: user.name,
         };
-
+        // Sign token
         jwt.sign(
           payload,
           keys.secretOrKey,
           {
-            expiresIn: 31556929, // 1year in seconds
+            // expiresIn: 31556926, // 1 year in seconds
+            expiresIn: 3000,
           },
-          (err,
-          (token) => {
-            res.json({ success: true, token: "Bearer " + token });
-          })
+          (err, token) => {
+            res.json({
+              success: true,
+              token: "Bearer " + token,
+            });
+          }
         );
       } else {
         return res
           .status(400)
-          .json({ passwordincorrect: "Password incorrect!!" });
+          .json({ passwordincorrect: "Password incorrect" });
       }
     });
   });
