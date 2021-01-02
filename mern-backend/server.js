@@ -7,6 +7,7 @@ const mongoose = require("mongoose");
 const passport = require("passport");
 
 const users = require("./routes/api/users");
+const todos = require("./routes/api/todos");
 const PORT = 4000;
 
 // let Todo = require("./todo.model");
@@ -33,6 +34,7 @@ require("./config/passport")(passport);
 
 //routes
 app.use("/api/users", users);
+app.use("/api/todos", todos);
 
 //route to get all todo list
 // todoRoutes.route("/").get(function (req, res) {

@@ -1,11 +1,44 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import { Link } from "react-router-dom";
+import {
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
+  UncontrolledDropdown,
+  Badge,
+} from "reactstrap";
+import { connect } from "react-redux";
+import { logoutUser, setCurrentUser } from "../../actions/authActions";
 
-export default function Navbar() {
+export const Avataar = (props) => {
+  return (
+    <Fragment>
+      <span
+        style={{
+          backgroundColor: "#fff",
+          color: "#0d6efd",
+          borderRadius: "50%",
+          padding: "3px 9px",
+        }}
+      >
+        {props.name.charAt(0).toUpperCase()}
+      </span>
+    </Fragment>
+  );
+};
+
+const Navbar = (props) => {
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const toggle = () => setDropdownOpen((prevState) => !prevState);
+  const onLogoutClick = (e) => {
+    e.preventDefault();
+    props.logoutUser();
+  };
+
   return (
     <Fragment>
       <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div className="container-fluid">
+        <div className="container">
           <a className="navbar-brand" href="#">
             MERN STACK APP
           </a>
@@ -27,31 +60,28 @@ export default function Navbar() {
               </li>
             </ul>
             <form className="d-flex">
-              <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                <li className="nav-item ml-auto">
-                  <Link to="/login">
-                    <a className="nav-link active" aria-current="page" href="#">
-                      Login
-                    </a>
-                  </Link>
-                </li>
-                <li className="nav-item ml-auto">
-                  <Link to="/register">
-                    <a
-                      className="nav-link active"
-                      aria-current="page"
-                      href="#"
-                      style={{ textDecoration: "none" }}
-                    >
-                      Register
-                    </a>
-                  </Link>
-                </li>
-              </ul>
+              <UncontrolledDropdown>
+                <DropdownToggle
+                  tag="a"
+                  className="nav-link"
+                  style={{ color: "#fff", cursor: "pointer" }}
+                >
+                  {props.name ? <Avataar name={props.name} /> : "John Doe"}
+                </DropdownToggle>
+                <DropdownMenu>
+                  <DropdownItem onClick={onLogoutClick}>Log Out</DropdownItem>
+                </DropdownMenu>
+              </UncontrolledDropdown>
             </form>
           </div>
         </div>
       </nav>
     </Fragment>
   );
-}
+};
+
+const mapStateToProps = (state) => ({
+  name: state.auth.user.name,
+});
+
+export default connect(mapStateToProps, { logoutUser, setCurrentUser })(Navbar);

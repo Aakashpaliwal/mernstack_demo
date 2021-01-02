@@ -1,16 +1,14 @@
 import React, { Component, Fragment } from "react";
-import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { logoutUser } from "../../actions/authActions";
+import { getTodoList } from "../../actions/todoActions";
 
 export class Dashboard extends Component {
-  onLogoutClick = (e) => {
-    e.preventDefault();
-    this.props.logoutUser();
-  };
+  async componentDidMount() {
+    await this.props.getTodoList(this.props);
+  }
 
   render() {
-    const { user } = this.props.auth;
+    const { todoList } = this.props;
     return (
       <Fragment>
         <div className="container">
@@ -19,14 +17,56 @@ export class Dashboard extends Component {
               <div className="card mt-5">
                 <h5 className="card-header">Dashboard</h5>
                 <div className="card-body">
-                  <p className="card-text">Welcome to dashboard!!</p>
-                  <button
-                    className="btn btn-info"
-                    onClick={this.onLogoutClick}
-                    type="button"
-                  >
-                    <span style={{ color: "#fff" }}>Log out</span>
-                  </button>
+                  {todoList != undefined ? (
+                    <Fragment>
+                      <table className="table table-responsive table-striped table-hover table-bordered">
+                        <thead>
+                          <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Priority</th>
+                            <th scope="col">Responsible</th>
+                            <th scope="col">Completed</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {this.props.todoList.length > 0 ? (
+                            <Fragment>
+                              {this.props.todoList.map(function (todoList, id) {
+                                return (
+                                  <tr key={id}>
+                                    <td>{todoList._id}</td>
+                                    <td>{todoList.todo_description}</td>
+                                    <td>{todoList.todo_priority}</td>
+                                    <td>{todoList.todo_responsible}</td>
+                                    <td>
+                                      {todoList.todo_completed == 0
+                                        ? "Uncomplete"
+                                        : "Complete"}
+                                    </td>
+                                  </tr>
+                                );
+                              }, this)}
+                            </Fragment>
+                          ) : (
+                            <Fragment>
+                              <tr>
+                                <td colSpan={6}>
+                                  <center>No Data</center>
+                                </td>
+                              </tr>
+                            </Fragment>
+                          )}
+                        </tbody>
+                      </table>
+                    </Fragment>
+                  ) : (
+                    <Fragment>
+                      <center>
+                        <p>Loading....</p>
+                      </center>
+                    </Fragment>
+                  )}
                 </div>
               </div>
             </div>
@@ -37,11 +77,7 @@ export class Dashboard extends Component {
   }
 }
 
-Dashboard.propTypes = {
-  logoutUser: PropTypes.func.isRequired,
-  auth: PropTypes.object.isRequired,
-};
 const mapStateToProps = (state) => ({
-  auth: state.auth,
+  todoList: state.todo.todo_list.data,
 });
-export default connect(mapStateToProps, { logoutUser })(Dashboard);
+export default connect(mapStateToProps, { getTodoList })(Dashboard);
