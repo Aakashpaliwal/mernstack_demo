@@ -1,0 +1,11 @@
+.sidebar_parent_container ul li {
+  list-style: none;
+  cursor: pointer;
+  padding-left: 15px;
+  border-left: solid 2px transparent;
+}
+.activeLink {
+  color: #3498db;
+  font-weight: 500;
+  border-left: solid 2px #3498db !important;
+}

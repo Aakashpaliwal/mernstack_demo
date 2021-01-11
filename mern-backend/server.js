@@ -8,6 +8,7 @@ const passport = require("passport");
 
 const users = require("./routes/api/users");
 const todos = require("./routes/api/todos");
+const startups = require("./routes/api/startup");
 const PORT = 4000;
 
 // let Todo = require("./todo.model");
@@ -35,6 +36,7 @@ require("./config/passport")(passport);
 //routes
 app.use("/api/users", users);
 app.use("/api/todos", todos);
+app.use("/api/startups", startups);
 
 //route to get all todo list
 // todoRoutes.route("/").get(function (req, res) {
