@@ -37,6 +37,7 @@ require("./config/passport")(passport);
 app.use("/api/users", users);
 app.use("/api/todos", todos);
 app.use("/api/startups", startups);
+app.use("/api/posts/", require("./routes/api/posts"));
 
 //route to get all todo list
 // todoRoutes.route("/").get(function (req, res) {

@@ -16,18 +16,19 @@ const passport = require("passport");
 router.post("/register", (req, res) => {
   //Form Validation
   const { errors, isValid } = validateRegisterInput(req.body);
+  const { user_name, email, password } = req.body;
 
   //check validation
   if (!isValid) {
     return res.status(400).json(errors);
   }
 
-  User.findOne({ email: req.body.email }).then((user) => {
+  User.findOne({ $or: [{ email }, { user_name }] }).then((user) => {
     if (user) {
       return res.status(400).json({ email: "Email already exist!" });
     } else {
       const newUser = new User({
-        name: req.body.name,
+        user_name: req.body.user_name,
         email: req.body.email,
         password: req.body.password,
         date: new Date(Date.now()).toISOString(),
@@ -76,7 +77,7 @@ router.post("/login", (req, res) => {
         // Create JWT Payload
         const payload = {
           id: user.id,
-          name: user.name,
+          user_name: user.user_name,
         };
         // Sign token
         jwt.sign(
@@ -87,7 +88,7 @@ router.post("/login", (req, res) => {
             // expiresIn: "3s",
           },
           (err, token) => {
-            res.json({
+            return res.json({
               success: true,
               token: "Bearer " + token,
             });
