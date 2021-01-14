@@ -2,12 +2,10 @@ import React, { Component, Fragment } from "react";
 import "./deal.scss";
 import { connect } from "react-redux";
 import { getStartupList } from "../../actions/startupActions";
-import {
-  Button,
-  UncontrolledPopover,
-  PopoverHeader,
-  PopoverBody,
-} from "reactstrap";
+import { Button, UncontrolledPopover, PopoverBody } from "reactstrap";
+import moment from "moment";
+import TimeAgo from "react-timeago";
+
 class Deal extends Component {
   constructor(props) {
     super(props);
@@ -25,10 +23,25 @@ class Deal extends Component {
           {startupList.length > 0 ? (
             <Fragment>
               {startupList.map(function (startupList, id) {
+                let startup_date = moment(`${startupList.date}`).format(
+                  "MMMM Do YYYY"
+                );
                 return (
                   <div className="card mt-5" key={id}>
                     <h5 className="card-header bg-transparent">
                       {startupList.startup_name}
+                      <span
+                        className="from_now_time"
+                        style={{
+                          float: "right",
+                          color: "#8d8d8d",
+                          fontSize: "15px",
+                        }}
+                      >
+                        {/* {startup_date}
+                        <br /> */}
+                        <TimeAgo date={startupList.date} />
+                      </span>
                     </h5>
                     <div className="card-body">
                       <p className="card-text">

@@ -13,4 +13,22 @@ router.get("/getstartups", (req, res) => {
   });
 });
 
+//add single todo
+router.post("/addstartup", (req, res) => {
+  const newStartup = new Startup({
+    startup_name: req.body.startup_name,
+    startup_description: req.body.startup_description,
+    date: new Date(Date.now()).toISOString(),
+  });
+  newStartup
+    .save()
+    .then((newStartup) => {
+      res.json(newStartup);
+      res.status(200).send("new startup add");
+    })
+    .catch((err) => {
+      res.status(400).send("unable to add new startup");
+    });
+});
+
 module.exports = router;
