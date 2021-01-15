@@ -1,57 +1,64 @@
-import "./App.css";
-import { Route, Switch } from "react-router-dom";
-import jwt_decode from "jwt-decode";
-import authToken from "./utils/authToken";
-import { setCurrentUser, logoutUser } from "./actions/authActions";
-import ViewTodos from "./components/ViewTodos";
-import { Fragment } from "react";
-import EditTodo from "./components/EditTodo";
-import Navbar from "./components/Navbar/Navbar";
-import Login from "./components/Login/Login";
-import Register from "./components/Register/Register";
-import Home from "./components/Home";
+import React from "react";
+import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import { Provider } from "react-redux";
 import store from "./store";
-import Dashboard from "./components/Dashboard/Dashboard";
-import PrivateRoute from "./PrivateRoute";
+import jwt_decode from "jwt-decode";
+import setAuthToken from "./utils/setAuthToken";
+import { setCurrentUser, logoutUser } from "./actions/authActions";
 
-// Check for token to keep user logged in
-if (sessionStorage.jwtToken) {
-  // Set auth token header auth
-  const token = sessionStorage.jwtToken;
-  authToken(token);
-  // Decode token and get user info and exp
-  const decoded = jwt_decode(token);
-  // Set user and isAuthenticated
-  store.dispatch(setCurrentUser(decoded));
-  // Check for expired token
-  const currentTime = Date.now() / 1000; // to get in milliseconds
-  if (decoded.exp < currentTime) {
-    // Logout user
-    store.dispatch(logoutUser());
-    // Redirect to login
-    window.location.href = "./login";
-  }
+import LoginPage from "./containers/auth/LoginPage";
+import SignUpPage from "./containers/auth/SignUpPage";
+
+import ProgressBar from "./containers/layout/ProgressBar";
+import Navbar from "./containers/layout/Navbar";
+import Landing from "./components/layout/Landing";
+import BlogPage from "./containers/BlogPage";
+import PrivateRoute from "./utils/PrivateRoute";
+
+import ViewPostPage from "./containers/posts/ViewPostPage";
+import CreatePostPage from "./containers/posts/CreatePostPage";
+import UpdatePostPage from "./containers/posts/UpdatePostPage";
+
+if (localStorage.jwtToken) {
+   const token = localStorage.jwtToken;
+   setAuthToken(token);
+   const decoded = jwt_decode(token);
+   store.dispatch(setCurrentUser(decoded));
+   const currentTime = Date.now() / 1000;
+   if (decoded.exp < currentTime) {
+      store.dispatch(logoutUser());
+      window.location.href = "./loginPage";
+   }
 }
 
-function App() {
-  return (
-    <Fragment>
+const App = () => {
+   return (
       <Provider store={store}>
-        <Navbar />
-        <Route path="/" exact component={Home} />
-        <Route path="/login" exact component={Login} />
-        <Route path="/register" exact component={Register} />
-        <Switch>
-          <PrivateRoute exact path="/dashboard" component={Dashboard} />
-        </Switch>
-        {/* <div className="text-center mb-5 mt-5">MERN STACK TODOS</div>
-      <hr />
-      <Route path="/" exact component={ViewTodos} />
-      <Route path="/edit/:id" exact component={EditTodo} /> */}
+         <BrowserRouter>
+            <ProgressBar />
+            <Navbar />
+            <Switch>
+               <Route path="/" exact component={Landing} />
+               <Route path="/login" component={LoginPage} />
+               <Route path="/signup" component={SignUpPage} />
+               <PrivateRoute exact path="/blog" component={BlogPage} />
+               <PrivateRoute
+                  exact
+                  path="/blog/post/create"
+                  component={CreatePostPage}
+               />
+               <PrivateRoute
+                  exact
+                  path="/blog/post/update/:id"
+                  component={UpdatePostPage}
+               />
+               <Route exact path="/blog/post/:id" component={ViewPostPage} />
+               <Route path="/blog/:author" component={BlogPage} />
+               <Redirect from="*" to="/" />
+            </Switch>
+         </BrowserRouter>
       </Provider>
-    </Fragment>
-  );
-}
+   );
+};
 
 export default App;

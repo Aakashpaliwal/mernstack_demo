@@ -76,7 +76,7 @@ const Navbar = (props) => {
 };
 
 const mapStateToProps = (state) => ({
-  name: state.auth.user.name,
+  name: state.auth.user.user_name,
 });
 
 export default connect(mapStateToProps, { logoutUser, setCurrentUser })(Navbar);

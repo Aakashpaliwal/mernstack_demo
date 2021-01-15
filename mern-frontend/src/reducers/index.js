@@ -1,12 +1,10 @@
 import { combineReducers } from "redux";
-import authReducers from "./authReducers";
-import errorReducers from "./errorReducers";
-import todoReducers from "./todoReducers";
-import startupReducers from "./startupReducers";
+import authReducer from "./authReducers";
+import errorReducer from "./errorReducers";
+import postReducer from "./postReducer";
 
 export default combineReducers({
-  auth: authReducers,
-  error: errorReducers,
-  todo: todoReducers,
-  startup: startupReducers,
+   auth: authReducer,
+   post: postReducer,
+   errors: errorReducer
 });
