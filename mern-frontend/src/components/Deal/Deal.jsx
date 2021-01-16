@@ -9,10 +9,13 @@ import TimeAgo from "react-timeago";
 class Deal extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = { last_element_id: "" };
   }
   async componentDidMount() {
     await this.props.getStartupList(this.props);
+    this.setState({
+      last_element_id: this.props.startupList.length,
+    });
   }
 
   render() {
@@ -26,9 +29,20 @@ class Deal extends Component {
                 let startup_date = moment(`${startupList.date}`).format(
                   "MMMM Do YYYY"
                 );
+                console.log(id);
                 return (
-                  <div className="card mt-5" key={id}>
-                    <h5 className="card-header bg-transparent">
+                  <div
+                    className={`card mt-5 ${
+                      this.props.isDark && "custom_card_transparent_bg"
+                    } ${id == this.state.last_element_id - 1 && "mb-5"}`}
+                    key={id}
+                    style={
+                      this.props.isDark
+                        ? { color: "rgb(141, 141, 141)" }
+                        : { color: "#000" }
+                    }
+                  >
+                    <h5 className="card-header">
                       {startupList.startup_name}
                       <span
                         className="from_now_time"

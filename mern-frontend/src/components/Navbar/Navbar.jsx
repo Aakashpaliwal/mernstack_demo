@@ -1,4 +1,5 @@
 import React, { Fragment, useState } from "react";
+import "./navbar.scss";
 import { Link } from "react-router-dom";
 import {
   DropdownToggle,
@@ -9,6 +10,8 @@ import {
 } from "reactstrap";
 import { connect } from "react-redux";
 import { logoutUser, setCurrentUser } from "../../actions/authActions";
+import Toggle from "react-toggle";
+import "react-toggle/style.css";
 
 export const Avataar = (props) => {
   return (
@@ -28,8 +31,14 @@ export const Avataar = (props) => {
 };
 
 const Navbar = (props) => {
+  console.log("navbarprops", props.defaultThemeValue);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [isDark, setIsDark] = useState(props.defaultThemeValue);
   const toggle = () => setDropdownOpen((prevState) => !prevState);
+  const themeToggle = (event) => {
+    setIsDark(event.target.checked);
+    props.themeHandler(event.target.checked);
+  };
   const onLogoutClick = (e) => {
     e.preventDefault();
     props.logoutUser();
@@ -54,6 +63,13 @@ const Navbar = (props) => {
             <span className="navbar-toggler-icon"></span>
           </button>
           <div className="collapse navbar-collapse" id="navbarNav">
+            <Toggle
+              className="DarkToggle ml-auto"
+              checked={isDark}
+              onChange={(event) => themeToggle(event)}
+              icons={{ checked: "🌙", unchecked: "🔆" }}
+              aria-label="Dark mode"
+            />
             <form className="d-flex ml-auto">
               <UncontrolledDropdown>
                 <DropdownToggle

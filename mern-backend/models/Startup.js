@@ -6,6 +6,11 @@ const StartupSchema = new Schema({
   startup_description: { type: String },
   date: {
     type: Date,
+    default: new Date(Date.now()).toISOString(),
+  },
+  author: {
+    type: String,
+    required: true,
   },
 });
 

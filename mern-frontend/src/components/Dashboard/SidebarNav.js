@@ -1,4 +1,5 @@
 import React, { Fragment, useState } from "react";
+import { Link } from "react-router-dom";
 import "./dashboard.scss";
 
 const SidebarNav = (props) => {
@@ -43,6 +44,7 @@ const SidebarNav = (props) => {
           >
             <i className="lni lni-home"></i>&nbsp;&nbsp;Home
           </li>
+          {/* <Link to="/deals"> */}
           <li
             className={`mb-5 ${deals && "activeLink"}`}
             id="Deals"
@@ -50,6 +52,7 @@ const SidebarNav = (props) => {
           >
             <i className="lni lni-money-location"></i>&nbsp;&nbsp;Deals
           </li>
+          {/* </Link> */}
           <li
             className={`mb-5 ${syndicate && "activeLink"}`}
             id="Syndicate"

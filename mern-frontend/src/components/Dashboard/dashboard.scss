@@ -9,3 +9,22 @@
   font-weight: 500;
   border-left: solid 2px #3498db !important;
 }
+.custom_card_transparent_bg {
+  background-color: #1f1b24 !important;
+  border: solid 1px rgb(141, 141, 141);
+  color: #fff;
+  h5 {
+    color: rgb(141, 141, 141) !important;
+  }
+  .card-header {
+    border-bottom: solid 1px rgb(141, 141, 141) !important;
+  }
+  .card-body {
+    color: #fff;
+    table {
+      tr {
+        color: #fff;
+      }
+    }
+  }
+}

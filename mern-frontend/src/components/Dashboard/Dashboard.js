@@ -15,6 +15,7 @@ export class Dashboard extends Component {
   }
   async componentDidMount() {
     await this.props.getTodoList(this.props);
+    console.log(this.props.isDarkTheme);
   }
 
   headerValueChange = (headerValueProps) => {
@@ -37,11 +38,22 @@ export class Dashboard extends Component {
             </div>
             <div className="col-lg-10 col-md-10 col-sm-12 col-xs-12">
               {this.state.headerValue === "Home" && (
-                <div className="card mt-5">
-                  <h5 className="card-header bg-transparent">
+                <div
+                  className={`card mt-5 ${
+                    this.props.isDarkTheme && "custom_card_transparent_bg"
+                  }`}
+                >
+                  <h5
+                    className={`card-header`}
+                    style={
+                      this.props.isDarkTheme
+                        ? { color: "rgb(141, 141, 141)" }
+                        : { color: "#000" }
+                    }
+                  >
                     {this.state.headerValue !== "Home"
                       ? this.state.headerValue
-                      : "Dashboard"}
+                      : `Dashboard`}
                   </h5>
                   <div className="card-body">
                     {todoList != undefined ? (
@@ -102,7 +114,10 @@ export class Dashboard extends Component {
                 </div>
               )}
               {this.state.headerValue === "Deals" && (
-                <Deal headerName={this.state.headerValue} />
+                <Deal
+                  headerName={this.state.headerValue}
+                  isDark={this.props.isDarkTheme}
+                />
               )}
               {this.state.headerValue === "Syndicate" && (
                 <Syndicate headerName={this.state.headerValue} />
